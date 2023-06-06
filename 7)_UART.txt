@@ -1,0 +1,103 @@
+#include <xc.h>
+#include <stdint.h>
+
+#define _XTAL_FREQ 8000000    // Set the oscillator frequency
+
+void UART_init(uint32_t baud_rate) {
+    // Calculate the baud rate divisor
+    uint16_t divisor = (_XTAL_FREQ / (baud_rate * 16)) - 1;
+    
+    // Configure the UART
+    TRISCbits.TRISC6 = 0;    // TX pin as output
+    TRISCbits.TRISC7 = 1;    // RX pin as input
+    TXSTAbits.TXEN = 1;      // Enable TX
+    RCSTAbits.SPEN = 1;      // Enable serial port
+    BAUDCONbits.BRG16 = 1;   // 16-bit baud rate generator
+    TXSTAbits.BRGH = 1;      // High-speed baud rate
+    SPBRG = divisor & 0xFF;  // Load lower 8 bits of divisor
+    SPBRGH = (divisor >> 8) & 0xFF; // Load upper 8 bits of divisor
+}
+
+void UART_sendChar(char data) {
+    while (!TXSTAbits.TRMT);  // Wait for previous transmission to complete
+    TXREG = data;             // Load data into the transmit register
+}
+
+char UART_receiveChar() {
+    while (!PIR1bits.RCIF);   // Wait for reception to complete
+    return RCREG;             // Return received data
+}
+
+void UART_sendString(const char* str) {
+    while (*str != '\0') {
+        UART_sendChar(*str);
+        str++;
+    }
+}
+
+void main() {
+    UART_init(9600);    // Initialize UART with baud rate 9600
+    
+    while (1) {
+        char receivedChar = UART_receiveChar();
+        UART_sendChar(receivedChar);
+    }
+}
+
+
+
+/*
+
+Steps for Tx/Rx using Serial Communication (USART):
+1. Calculate the SPBRGH: SPBRG value for desired baud rate. Load the 
+calculated value in SPBRGH: SPBRG.
+2. Configure Port pin RC6 as output and port pin RC7 as input.
+3. Set BRG Mode = 8-bit by setting BRG16 bit in BAUDCON Register                                                                                                                                                                                                                               4. Set EUSART mode = Asynchronous by clearing SYNC bit in TXSTA 
+Register
+5. Enable the Serial Port by setting SPEN bit in RCSTA Register
+6. Enable the Transmission by setting TXEN bit in TXSTA Register
+7. Check TRMT bit in TXSTA register for TXREG empty. Load data to the 
+TXREG register if TRMT = 1;
+8. Repeat the step 6 until complete message transmitted.
+9. Enable the continuous reception by setting CREN bit in RCSTA 
+register.
+10. Poll the RCIF bit in PIR1 register to check data is received.
+11. Read the 8-bit received data by reading the RCREG register.
+12. Do the control action as per data received.
+13. Repeat the steps from 10
+
+
+Explanation:-
+Let's break down the code step by step:
+
+1. The code includes necessary header files `xc.h` and `stdint.h`, which provide important definitions and functions needed for the code to work correctly.
+
+2. The code defines a constant `_XTAL_FREQ` with a value of `8000000`, representing the frequency of the microcontroller's oscillator. It is used for timing calculations in UART initialization.
+
+3. The code defines a function called `UART_init(uint32_t baud_rate)`, which is used to initialize the UART (Universal Asynchronous Receiver-Transmitter) module for serial communication. The function takes a baud rate as an argument.
+
+4. Inside the `UART_init()` function, the code calculates the baud rate divisor based on the provided baud rate and the oscillator frequency. The divisor value determines the speed of data transmission.
+
+5. The function then configures the necessary registers and pins for UART operation. It sets the TX (transmit) pin as an output (`TRISCbits.TRISC6 = 0`) and the RX (receive) pin as an input (`TRISCbits.TRISC7 = 1`).
+
+6. The code enables the UART transmit module (`TXSTAbits.TXEN = 1`) and enables the serial port (`RCSTAbits.SPEN = 1`).
+
+7. Additional settings are made for the UART module. `BAUDCONbits.BRG16 = 1` selects the 16-bit baud rate generator for higher accuracy, and `TXSTAbits.BRGH = 1` selects the high-speed baud rate option.
+
+8. The calculated divisor value is split into lower and upper 8 bits and loaded into the `SPBRG` and `SPBRGH` registers, respectively. This sets the baud rate for communication.
+
+9. The code defines two more functions, `UART_sendChar(char data)` and `UART_receiveChar()`, to send and receive individual characters over UART.
+
+10. The `UART_sendChar()` function waits for the previous transmission to complete (`while (!TXSTAbits.TRMT)`) and then loads the character data into the transmit register (`TXREG`).
+
+11. The `UART_receiveChar()` function waits for a character to be received (`while (!PIR1bits.RCIF)`) and then returns the received character from the receive register (`RCREG`).
+
+12. The code defines another function, `UART_sendString(const char* str)`, to send a string of characters over UART. It iterates through each character in the provided string and calls `UART_sendChar()` to send each character.
+
+13. In the `main()` function, the code initializes the UART module by calling `UART_init(9600)` with a baud rate of 9600. This sets up the microcontroller for serial communication.
+
+14. The code enters an infinite loop (`while (1)`), which repeatedly receives a character using `UART_receiveChar()` and then sends the received character back using `UART_sendChar()`.
+
+That's the breakdown of the code! It sets up the UART module for serial communication and continuously receives characters and sends them back. You can connect your microcontroller to a computer and use a terminal program to communicate with it.
+
+*/
