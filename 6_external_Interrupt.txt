@@ -1,0 +1,49 @@
+#include <xc.h>
+#include <stdint.h>
+
+#define _XTAL_FREQ 8000000    // Set the oscillator frequency
+
+#define SWITCH_PIN PORTBbits.RB0
+#define RELAY_PIN PORTBbits.RB1
+
+void switchSetup() {
+    TRISBbits.RB0 = 1;     // Set switch pin as input
+    INTCON2bits.INTEDG0 = 0; // Interrupt on falling edge of RB0/INT0
+    INTCONbits.INT0IF = 0; // Clear the INT0 interrupt flag
+    INTCONbits.INT0IE = 1; // Enable the INT0 external interrupt
+    INTCONbits.GIE = 1;    // Enable global interrupts
+}
+
+void relaySetup() {
+    TRISBbits.RB1 = 0;     // Set relay pin as output
+}
+
+void relayOn() {
+    RELAY_PIN = 1;        // Set relay pin high to turn on the relay
+}
+
+void relayOff() {
+    RELAY_PIN = 0;        // Set relay pin low to turn off the relay
+}
+
+void __interrupt() ISR() {
+    if (INTCONbits.INT0IF) {
+        INTCONbits.INT0IF = 0; // Clear the INT0 interrupt flag
+
+        if (SWITCH_PIN == 0) {
+            relayOn();  // Turn on the relay when the switch is pressed
+        } else {
+            relayOff(); // Turn off the relay when the switch is released
+        }
+    }
+}
+
+void main() {
+    switchSetup();
+    relaySetup();
+
+    while (1) {
+        // Main program loop
+    }
+}
+
