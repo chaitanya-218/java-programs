@@ -47,3 +47,31 @@ void main() {
     }
 }
 
+
+
+
+
+/*
+
+1. The code includes two header files: `<xc.h>` and `<stdint.h>`. `<xc.h>` is specific to the XC8 compiler for PIC microcontrollers, while `<stdint.h>` provides definitions for standard integer types.
+
+2. The code defines a constant `_XTAL_FREQ` and sets it to 8000000. This constant represents the oscillator frequency and is used for time calculations.
+
+3. The code defines `SWITCH_PIN` and `RELAY_PIN` as `PORTBbits.RB0` and `PORTBbits.RB1`, respectively. These constants represent the specific pins connected to the switch and relay.
+
+4. The code defines a function `switchSetup()` that configures the switch pin as an input. It sets `TRISBbits.RB0` to 1 to indicate that `RB0` is an input pin. Additionally, it configures the interrupt behavior for the switch by setting `INTCON2bits.INTEDG0` to 0, which triggers an interrupt on the falling edge of `RB0/INT0`. It also enables the INT0 external interrupt by setting `INTCONbits.INT0IE` to 1.
+
+5. The code defines a function `relaySetup()` that configures the relay pin as an output. It sets `TRISBbits.RB1` to 0 to indicate that `RB1` is an output pin.
+
+6. The code defines functions `relayOn()` and `relayOff()` to control the state of the relay. `relayOn()` sets `RELAY_PIN` to 1 to turn on the relay, while `relayOff()` sets `RELAY_PIN` to 0 to turn off the relay.
+
+7. The code includes an interrupt service routine (ISR) labeled `__interrupt()`. This function is automatically called when an interrupt occurs. In this case, it handles the INT0 external interrupt.
+
+8. Inside the ISR, the code checks if the INT0 interrupt flag (`INTCONbits.INT0IF`) is set. If it is, the code clears the interrupt flag and checks the state of the switch by reading `SWITCH_PIN`. If the switch is pressed (logic low, 0), it calls `relayOn()` to turn on the relay. If the switch is released (logic high, 1), it calls `relayOff()` to turn off the relay.
+
+9. The `main()` function serves as the entry point of the program. It calls `switchSetup()` and `relaySetup()` functions to configure the switch and relay pins.
+
+10. The program enters an infinite loop (`while (1)`) and continues to execute the code inside the loop indefinitely. This is typically the main program loop where you can add your custom logic.
+
+Overall, this code sets up an external interrupt for a switch connected to `RB0` (INT0) on a PIC microcontroller. When the switch is pressed, the relay connected to `RB1` is turned on, and when the switch is released, the relay is turned off. The specific logic for your program should be added within the infinite loop in the `main()` function.
+*/
