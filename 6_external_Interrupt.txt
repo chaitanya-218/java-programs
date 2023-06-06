@@ -53,6 +53,21 @@ void main() {
 
 /*
 
+Steps for Programming External Interrupt:
+1. Set PORTB External interrupt pin as an input.
+2. Also, make PORTB pins as digital input as it is multiplexed with ADC 
+channels. This is done by disabling the ADON bit in the ADCON1 
+register or by making the PBADEN configuration a bit low.
+3. Configure INTCON2 register for edge trigger i.e. positive or negative 
+edge.4. Enable external interrupt (INT0, INT1, INT2) by setting a respective 
+interrupt to enable bit in the INTCON register.
+5. Enable Global Interrupt (GIE).
+6. When an interrupt occurs, it will jump to the ISR to serve to 
+interrupt.
+7. Finally, clear the Interrupt flag and continue.
+
+Explain:-
+
 1. The code includes two header files: `<xc.h>` and `<stdint.h>`. `<xc.h>` is specific to the XC8 compiler for PIC microcontrollers, while `<stdint.h>` provides definitions for standard integer types.
 
 2. The code defines a constant `_XTAL_FREQ` and sets it to 8000000. This constant represents the oscillator frequency and is used for time calculations.
@@ -74,4 +89,6 @@ void main() {
 10. The program enters an infinite loop (`while (1)`) and continues to execute the code inside the loop indefinitely. This is typically the main program loop where you can add your custom logic.
 
 Overall, this code sets up an external interrupt for a switch connected to `RB0` (INT0) on a PIC microcontroller. When the switch is pressed, the relay connected to `RB1` is turned on, and when the switch is released, the relay is turned off. The specific logic for your program should be added within the infinite loop in the `main()` function.
+
+
 */
