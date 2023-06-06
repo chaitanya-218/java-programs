@@ -1,0 +1,80 @@
+#include <xc.h>
+#include <stdint.h>
+
+#define _XTAL_FREQ 8000000    // Set the oscillator frequency
+
+#define LED_PIN PORTBbits.RB0
+
+void ledSetup() {
+    TRISBbits.RB0 = 0;     // Set LED pin as output
+}
+
+void ledOn() {
+    LED_PIN = 1;          // Set LED pin high to turn on the LED
+}
+
+void ledOff() {
+    LED_PIN = 0;          // Set LED pin low to turn off the LED
+}
+
+void delay_ms(uint16_t milliseconds) {
+    while (milliseconds--) {
+        __delay_ms(1);    // Delay for 1 millisecond
+    }
+}
+
+void main() {
+    ledSetup();
+
+    while (1) {
+        ledOn();               // Turn on the LED
+        delay_ms(1000);        // Delay for 1000 milliseconds (1 second)
+        ledOff();              // Turn off the LED
+        delay_ms(1000);        // Delay for 1000 milliseconds (1 second)
+    }
+}
+
+
+/*
+
+Programming steps:
+1. Configure the TRISB register to make PortB as output port.
+2. Set all the bits of LATB register High (1) to glow all LEDs.
+3. Provide some delay.
+4. Set all the bits of LATB register Low (0) to turn off the LEDs.
+5. Provide some delay.
+6. Repeat the process from step 2.
+
+Explanation:-
+This code is an example of how to control an LED using a microcontroller. Let's go through each part of the code and explain its purpose:
+
+1. `#include <xc.h>` and `#include <stdint.h>`: These are include directives to import necessary header files. `xc.h` is a header file specific to the microcontroller being used, and `stdint.h` is a standard header file that provides definitions for fixed-width integer types.
+
+2. `#define _XTAL_FREQ 8000000`: This line defines a constant `_XTAL_FREQ` with the value 8000000, which represents the oscillator frequency of the microcontroller. This value is later used for time calculations in the `__delay_ms()` function.
+
+3. `#define LED_PIN PORTBbits.RB0`: This line defines a constant `LED_PIN` as the bit RB0 of the PORTB register. This constant is used to control the LED connected to that pin.
+
+4. `void ledSetup()`: This is a function definition for `ledSetup()`, which configures the pin connected to the LED as an output. In this case, RB0 is set as an output by setting the corresponding TRIS bit to 0.
+
+5. `void ledOn()`: This function turns on the LED by setting the `LED_PIN` (RB0) high. This is done by assigning the value 1 to the `LED_PIN`.
+
+6. `void ledOff()`: This function turns off the LED by setting the `LED_PIN` (RB0) low. This is done by assigning the value 0 to the `LED_PIN`.
+
+7. `void delay_ms(uint16_t milliseconds)`: This function is used to introduce a delay in milliseconds. It takes an argument `milliseconds` which determines the duration of the delay. The function uses a loop to repeatedly call the `__delay_ms()` function from the XC8 compiler, which introduces a 1-millisecond delay.
+
+8. `void main()`: This is the entry point of the program. It is the starting point of execution.
+
+9. `ledSetup()`: This line calls the `ledSetup()` function to configure the LED pin as an output.
+
+10. `while (1)`: This is an infinite loop that repeatedly executes the code inside its block.
+
+11. `ledOn()`: This turns on the LED by calling the `ledOn()` function.
+
+12. `delay_ms(1000)`: This introduces a delay of 1000 milliseconds (1 second) using the `delay_ms()` function.
+
+13. `ledOff()`: This turns off the LED by calling the `ledOff()` function.
+
+14. `delay_ms(1000)`: This introduces another delay of 1000 milliseconds (1 second).
+
+The program will continue executing these steps indefinitely, resulting in the LED blinking on for 1 second and off for 1 second repeatedly.
+
