@@ -52,3 +52,37 @@ void main() {
     }
 }
 
+
+
+
+
+/*
+The code includes two header files: `<xc.h>` and `<stdint.h>`. `<xc.h>` is specific to the XC8 compiler for PIC microcontrollers, while `<stdint.h>` provides definitions for standard integer types.
+
+2. The code defines a constant `_XTAL_FREQ` and sets it to 8000000. This constant represents the oscillator frequency and is used for time calculations.
+
+3. The code defines `BUZZER_PIN` as `PORTBbits.RB0`. It is assumed that `PORTB` refers to a register that controls the I/O pins of the microcontroller, and `RB0` represents the specific pin connected to the buzzer.
+
+4. The code declares a global variable `buzzerState` of type `uint8_t`, which is an 8-bit unsigned integer. This variable is used to track the state of the buzzer.
+
+5. The code defines a function `timerSetup()` that configures Timer0. It sets `T0CON` to `0b10000111`, which configures Timer0 as an 8-bit timer with a prescaler of 256. This setup is typically done to generate interrupts at a specific interval.
+
+6. Inside `timerSetup()`, the code sets `TMR0L` to 100, which initializes the timer value. This value is used to generate a 1ms interrupt.
+
+7. The code enables the Timer0 interrupt by setting `INTCONbits.TMR0IE` to 1.
+
+8. The code defines a function `buzzerSetup()` that configures the buzzer pin as an output. It sets `TRISBbits.RB0` to 0 to indicate that `RB0` is an output pin.
+
+9. The code defines functions `buzzerOn()` and `buzzerOff()` to turn the buzzer on and off, respectively. They set `BUZZER_PIN` to 1 and 0, respectively, to control the buzzer state.
+
+10. The code includes an interrupt service routine (ISR) labeled `__interrupt()`. This function is automatically called when an interrupt occurs. In this case, it handles the Timer0 interrupt.
+
+11. Inside the ISR, the code checks if the Timer0 interrupt flag (`INTCONbits.TMR0IF`) is set. If it is, the code clears the interrupt flag and toggles the state of the buzzer using the `buzzerOn()` and `buzzerOff()` functions. The `buzzerState` variable is used to keep track of the current state of the buzzer.
+
+12. After toggling the buzzer state, the code reloads `TMR0L` with a value of 1000, which sets the timer value for the next 1ms interrupt.
+
+13. The `main()` function serves as the entry point of the program. It calls `timerSetup()` and `buzzerSetup()` functions to configure the timer and buzzer pin.
+
+14. The program enters an infinite loop (`while (1)`) and continues to execute the code inside the loop indefinitely. This is typically the main program loop where you can add your custom logic.
+
+*/
