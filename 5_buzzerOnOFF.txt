@@ -1,0 +1,54 @@
+#include <xc.h>
+#include <stdint.h>
+
+#define _XTAL_FREQ 8000000    // Set the oscillator frequency
+
+#define BUZZER_PIN PORTBbits.RB0
+
+volatile uint8_t buzzerState = 0;
+
+void timerSetup() {
+    T0CON = 0b10000111;    // Timer0, 8-bit, prescaler 256
+    TMR0L = 100;           // Initial timer value for 1ms interrupt
+    INTCONbits.TMR0IE = 1; // Enable Timer0 interrupt
+    INTCONbits.TMR0IF = 0; // Clear Timer0 interrupt flag
+    INTCONbits.GIE = 1;    // Enable global interrupts
+}
+
+void buzzerSetup() {
+    TRISBbits.RB0 = 0;     // Set buzzer pin as output
+}
+
+void buzzerOn() {
+    BUZZER_PIN = 1;        // Set buzzer pin high to turn on the buzzer
+}
+
+void buzzerOff() {
+    BUZZER_PIN = 0;        // Set buzzer pin low to turn off the buzzer
+}
+
+void __interrupt() ISR() {
+    if (INTCONbits.TMR0IF) {
+        INTCONbits.TMR0IF = 0; // Clear Timer0 interrupt flag
+
+        if (buzzerState == 0) {
+            buzzerOn();
+            buzzerState = 1;
+        } else {
+            buzzerOff();
+            buzzerState = 0;
+        }
+
+        TMR0L = 1000;           // Reload timer value for 1ms interrupt
+    }
+}
+
+void main() {
+    timerSetup();
+    buzzerSetup();
+
+    while (1) {
+        // Main program loop
+    }
+}
+
