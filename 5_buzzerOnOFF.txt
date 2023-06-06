@@ -57,6 +57,33 @@ void main() {
 
 
 /*
+
+Steps in Programming Timer Interrupt:
+1. Initialize PIC18XXXXX.
+2. Off the Timer0 or Timer1 by loading the value into the T0CON or 
+T1CON register.
+3. Load reg. TMR0 or TMR1 with initial value.
+4. Clear the TMR0IF flag or TMR1IF flag.
+INTCONbits.TMR0IF=0; // Timer0
+PIR1bits.TMR1IF=0; // Timer1
+5. Enable the Timer Interrupt TMR0IE or TMR1IE
+INTCONbits.TMR0IE=1; // Timer0
+PIE1bits.TMR1IE=1; // Timer1
+6. Enable peripheral interrupts INTCONbits.PEIE=1;
+7. Enable all interrupts INTCONbits.GIE=1;
+8. Start the Timer0 or Timer1.
+9. Write Main Function. Do main function while waiting for interrupt.
+10. When interrupt raised (TMR0IF=1 or TMR1IF =1), jump to ISR: 
+void interrupt ISR_label (void)
+11. In ISR:
+1. Stop the Timer0 or Timer1.
+2. Write ISR function.
+3. Reload TMR0 or TMR1 register.
+4. Clear the TMR0IF flag or TMR1IF flag.
+5. Re-enable interrupts.
+6. Start Timer0 or Timer1 (if required in ISR).
+
+Explanation:-
 The code includes two header files: `<xc.h>` and `<stdint.h>`. `<xc.h>` is specific to the XC8 compiler for PIC microcontrollers, while `<stdint.h>` provides definitions for standard integer types.
 
 2. The code defines a constant `_XTAL_FREQ` and sets it to 8000000. This constant represents the oscillator frequency and is used for time calculations.
