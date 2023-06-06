@@ -85,4 +85,6 @@ The code includes two header files: `<xc.h>` and `<stdint.h>`. `<xc.h>` is speci
 
 14. The program enters an infinite loop (`while (1)`) and continues to execute the code inside the loop indefinitely. This is typically the main program loop where you can add your custom logic.
 
+Overall, this code sets up Timer0 to generate a 1ms interrupt and uses the interrupt service routine to toggle the state of a buzzer connected to `RB0` pin on a PIC microcontroller. The specific logic for your program should be added within the infinite loop in the `main()` function.
+
 */
