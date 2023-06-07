@@ -73,3 +73,6 @@ In summary, the code initializes two arrays, `a` and `b`, with values and demons
 5. Finally, the `getch()` function is used to pause the program and wait for user input before it exits.
 
 In summary, the code demonstrates a simple element-wise copying of values from one array (`b`) to another array (`a`). It provides a visual representation of the initial and updated values of the arrays to showcase the result of the copying process. The `getch()` function is included to ensure that the output is visible to the user before the program terminates.
+
+
+*/
