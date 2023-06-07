@@ -95,7 +95,9 @@ int main(void)
         lcd_delay(9000);
     }
     
-    
+       return 0;
+}
+
     
     
     /*
@@ -133,6 +135,7 @@ int main(void)
 That's the explanation of the given code. Make sure to connect the temperature sensor to the appropriate ADC channel and configure it correctly.
 
 
-*/
+
     return 0;
 }
+*/
