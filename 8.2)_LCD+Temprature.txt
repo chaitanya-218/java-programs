@@ -1,0 +1,111 @@
+#include <xc.h>
+#include <stdio.h>
+
+// LCD Pin Definitions
+#define LCD_RS RB0
+#define LCD_EN RB1
+#define LCD_DATA PORTD
+
+// Function Declarations
+void LCD_Init();
+void LCD_Command(unsigned char command);
+void LCD_Data(unsigned char data);
+void LCD_Print(const char *str);
+void ADC_Init();
+unsigned int ADC_Read();
+void delay_ms(unsigned int ms);
+
+int main(void) {
+    unsigned int adc_value;
+    float voltage, temperature;
+    char temperature_str[10];
+
+    // Initialize LCD and ADC
+    LCD_Init();
+    ADC_Init();
+
+    while (1) {
+        // Read ADC value
+        adc_value = ADC_Read();
+
+        // Convert ADC value to voltage
+        voltage = (adc_value * 5.0) / 1023.0;
+
+        // Calculate temperature using a formula specific to your temperature sensor
+        // Replace the formula with the appropriate one for your sensor
+        temperature = voltage * 100.0;
+
+        // Convert temperature to string
+        sprintf(temperature_str, "%.2f C", temperature);
+
+        // Display temperature on LCD
+        LCD_Command(0x80); // Move cursor to the beginning of the first line
+        LCD_Print("Temperature:");
+        LCD_Command(0xC0); // Move cursor to the beginning of the second line
+        LCD_Print(temperature_str);
+
+        delay_ms(1000); // Delay for 1 second
+    }
+
+    return 0;
+}
+
+// LCD initialization function
+void LCD_Init() {
+    LCD_Command(0x38); // 2 lines, 5x7 matrix
+    LCD_Command(0x0C); // Display on, cursor off
+    LCD_Command(0x06); // Increment cursor
+    LCD_Command(0x01); // Clear display
+    delay_ms(10);
+}
+
+// Function to send command to LCD
+void LCD_Command(unsigned char command) {
+    LCD_RS = 0; // RS = 0 for command
+    LCD_DATA = command;
+    LCD_EN = 1; // Enable pulse
+    delay_ms(1);
+    LCD_EN = 0;
+    delay_ms(1);
+}
+
+// Function to send data to LCD
+void LCD_Data(unsigned char data) {
+    LCD_RS = 1; // RS = 1 for data
+    LCD_DATA = data;
+    LCD_EN = 1; // Enable pulse
+    delay_ms(1);
+    LCD_EN = 0;
+    delay_ms(1);
+}
+
+// Function to print a string on LCD
+void LCD_Print(const char *str) {
+    while (*str != '\0') {
+        LCD_Data(*str);
+        str++;
+    }
+}
+
+// ADC initialization function
+void ADC_Init() {
+    ADCON1 = 0x0F; // Set all pins as digital I/O
+    ADCON2 = 0b10101010; // Right justified, Fosc/64 conversion clock, Vref+ = VDD, Vref- = VSS
+    ADCON0 = 0x01; // Select channel 0 and turn on ADC module
+}
+
+// ADC reading function
+unsigned int ADC_Read() {
+    ADCON0bits.GO = 1; // Start ADC conversion
+    while (ADCON0bits.GO); // Wait for conversion to complete
+    return (ADRESH << 8) + ADRESL; // Return 10-bit ADC result
+}
+
+// Delay function in milliseconds
+void delay_ms(unsigned int ms) {
+    unsigned int i, j;
+    for (i = 0; i < ms; i++) {
+        for (j = 0; j < 1000; j++);
+    }
+}
+
