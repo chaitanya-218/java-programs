@@ -94,5 +94,45 @@ int main(void)
         LCD_display(2,1,str);
         lcd_delay(9000);
     }
+    
+    
+    
+    
+    /*
+    
+    This code is an Embedded C program for temperature sensor interfacing using an ADC and displaying the temperature on an LCD. Let's go through the code and explain its functionality:
+
+1. The code includes the necessary header files and defines the LCD control pins and LCD data port.
+
+2. The `lcd_delay` function is a delay function used for creating time delays in the LCD communication process. It utilizes two nested loops for delay.
+
+3. The `SendInstruction` function is used to send instructions to the LCD. It sets the RS pin to 0 (indicating an instruction), sets the data on the LCD port, toggles the EN pin to latch the command, and introduces a delay.
+
+4. The `SendData` function is similar to `SendInstruction`, but it sends data to the LCD instead of instructions. It sets the RS pin to 1 (indicating data) and follows the same process as `SendInstruction`.
+
+5. The `InitLCD` function initializes the LCD by configuring the necessary pins as outputs and sending the initialization sequence of instructions to the LCD. The initialization sequence includes setting the 8-bit mode, 2-line display, entry mode, display on with the cursor off, clearing the display, and setting the address to the beginning.
+
+6. The `LCD_display` function is used to display characters on the LCD. It takes arguments for the row number, position, and a character pointer. It sets the address based on the row and position, and then sends the characters one by one using `SendData`.
+
+7. The `ADCInit` function initializes the ADC module. It configures the necessary pins as inputs and sets the ADCON1 and ADCON2 registers for the desired ADC operation.
+
+8. The `Read_Temp` function reads the temperature from the ADC. It sets the ADC channel, starts the conversion by setting the GODONE bit, and waits until the conversion is complete by checking the GO_DONE bit. It then returns the ADC result.
+
+9. In the `main` function, the LCD is initialized, the ADC is initialized, and the "Temperature:" message is displayed on the first line of the LCD using `LCD_display`.
+
+10. Inside the infinite `while(1)` loop, the temperature is read from the ADC using `Read_Temp`. The obtained ADC value is then converted to temperature using a formula specific to your temperature sensor. The calculated temperature is stored in the `temp` variable.
+
+11. The temperature value is converted to a string using the `sprintf` function and stored in the `str` array.
+
+12. The temperature string is then displayed on the second line of the LCD using `LCD_display`.
+
+13. A delay of 9000 cycles is introduced using `lcd_delay`.
+
+14. The loop continues indefinitely, continuously updating and displaying the temperature on the LCD.
+
+That's the explanation of the given code. Make sure to connect the temperature sensor to the appropriate ADC channel and configure it correctly.
+
+
+*/
     return 0;
 }
