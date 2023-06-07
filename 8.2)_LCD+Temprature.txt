@@ -109,3 +109,58 @@ void delay_ms(unsigned int ms) {
     }
 }
 
+
+
+
+/*
+
+ Let's go through the provided code and explain its functionality point by point:
+
+1. The code includes necessary header files, such as `<xc.h>` for the specific microcontroller being used and `<stdio.h>` for standard input/output operations.
+
+2. LCD Pin Definitions: Defines the connections of LCD control pins and data port. In this code, the RS pin is defined as RB0, the EN pin is defined as RB1, and the data port is defined as PORTD.
+
+3. Function Declarations: Declares the functions used in the code. These functions include LCD initialization, sending commands and data to the LCD, printing on the LCD, ADC initialization, ADC reading, and a delay function.
+
+4. The `main` function: The main entry point of the program.
+
+5. Inside the main function:
+   - Local variable declarations: `adc_value` to store the ADC value, `voltage` to store the voltage calculated from the ADC value, `temperature` to store the calculated temperature, and `temperature_str` to store the temperature as a string.
+   
+   - LCD initialization: Calls the `LCD_Init` function to initialize the LCD.
+   
+   - ADC initialization: Calls the `ADC_Init` function to initialize the ADC module.
+   
+   - Infinite while loop: The program enters an infinite loop to continuously read the ADC, calculate the temperature, display it on the LCD, and introduce a delay.
+   
+   - Inside the loop:
+     - Read ADC value: Calls the `ADC_Read` function to read the ADC value and stores it in `adc_value`.
+     
+     - Convert ADC value to voltage: Calculates the voltage using the ADC value and stores it in `voltage`.
+     
+     - Calculate temperature: Calculates the temperature using a specific formula and stores it in `temperature`.
+     
+     - Convert temperature to string: Uses the `sprintf` function to convert the temperature to a string and stores it in `temperature_str`.
+     
+     - Display temperature on LCD: Sends LCD commands and data to display the "Temperature:" message on the first line of the LCD using `LCD_Command` and `LCD_Print` functions. Then, displays the temperature string on the second line of the LCD.
+     
+     - Delay: Calls the `delay_ms` function to introduce a delay of 1 second.
+   
+6. LCD initialization function (`LCD_Init`): Sends the necessary commands to initialize the LCD. It sets the display mode, clears the display, and sets the entry mode.
+
+7. Function to send command to LCD (`LCD_Command`): Sets RS to 0 (indicating a command), sends the command data to the LCD data port, and pulses the enable pin to latch the command.
+
+8. Function to send data to LCD (`LCD_Data`): Sets RS to 1 (indicating data), sends the data to the LCD data port, and pulses the enable pin to latch the data.
+
+9. Function to print a string on LCD (`LCD_Print`): Takes a string pointer as input and sends each character of the string to the LCD using `LCD_Data`.
+
+10. ADC initialization function (`ADC_Init`): Configures the ADC module by setting the appropriate register values. It sets all the pins as digital I/O, configures the ADCON2 register for the desired ADC operation, and enables the ADC module by setting ADCON0 register.
+
+11. ADC reading function (`ADC_Read`): Starts the ADC conversion by setting the GO bit, waits for the conversion to complete by checking the GO bit, and returns the 10-bit ADC result by combining ADRESH and ADRESL registers.
+
+12. Delay function in milliseconds (`delay_ms`): Introduces a delay by using nested loops. The number of loops determines the delay duration.
+
+That's the point
+
+
+*/
